@@ -12,28 +12,7 @@ Each folder corresponds to a specific set of tutorials or documentation:
 
 ---
 
-## About solids4foam
-
-**solids4foam** is an open-source toolbox based on the **finite volume method (FVM)**, integrated into OpenFOAM. It is designed to perform **solid mechanics** simulations as well as **fluid–solid interaction (FSI)** using the finite volume approach. This extends OpenFOAM’s capabilities beyond fluid dynamics into coupled multiphysics simulations.
-
----
-
-## Getting Started
-
-### Requirements
+## Requirements
 - [OpenFOAM v2412](https://www.openfoam.com/download/) (tested version)  
 - [solids4foam](https://www.solids4foam.com/)  
 - A Linux environment (WSL, Ubuntu, or native Linux recommended)  
-
-### Running a Case
-From the case directory:
-
-```bash
-# 1. Generate the mesh
-blockMesh
-
-# 2. Run the solver
-<solverName>   # e.g., icoFoam, simpleFoam, pimpleFoam, solids4Foam
-
-# 3. Post-process results
-paraFoam
