@@ -1,0 +1,61 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      k;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+
+dimensions      [0 2 -2 0 0 0 0]; 
+
+//k is the turbulence kinetic energy 
+
+internalField   uniform 3.75e-3;    //[k = 3/2(I(Uref))^2] 
+                                    //Here Intensity (I) is taken as 5% or 0.05. 
+                                    //Uref is 1m/s. 
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    aerofoil
+    {
+        type            kqRWallFunction;
+        value           uniform 0; //k taken as zero in the walls for initial condition
+    }
+
+    inlet
+    {
+        type            fixedValue;
+        value           $internalField; //value from the internal field is used here
+    }
+
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      $internalField;
+        value           $internalField;
+    }
+
+    front
+    {
+        type            empty;
+    }
+    back
+    {
+        type            empty;
+    }
+}
+
+
+// ************************************************************************* //

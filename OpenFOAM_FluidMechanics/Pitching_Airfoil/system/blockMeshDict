@@ -1,0 +1,203 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM The Open Source CFD Toolbox
+   \\    /   O peration     | Website  https//openfoam.org
+    \\  /    A nd           | Version  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+    xMin -10;
+    xMax  15;
+    zMin -5;
+    zMax  5;
+
+    // number of cells
+    zCells  35;                // from profile patch to external patch
+    xUCells 9;                 // upstream blocks in streamwise direction
+    xMCells 7;                 // middle blocks in streamwise direction
+    xDCells 35;                // downstream blocks in streamwise direction
+
+    // grading
+    zGrading    50;  		// from profile patch to external patch
+    xUGrading   5;              // circumferential on outer patches of upstream blocks
+    leadGrading 0.1;            // circumferential on outline patch of upstream blocks
+    xDGrading   10;             // downstream
+
+    xLead   0;
+    zLead   0;
+    xTrail  1;
+    zTrail  0;
+    xUpper  0.3;
+    zUpper  0.06;
+    xLower  0.3;
+    zLower -0.06;
+
+
+geometry
+{
+    aerofoil
+    {
+        type   triSurfaceMesh;
+        file   "NACA0012.obj";
+    }
+    cylinder
+    {
+        type   searchableCylinder;
+        point1 ($xUpper -1e3 0);
+        point2 ($xUpper  1e3 0);
+        radius $zMax;
+    }
+}
+
+vertices
+(
+    project ($xLower -0.1 $zMin) (cylinder)	//0
+    ($xTrail -0.1 $zMin)			//1
+    ($xMax -0.1 $zMin)				//2
+    project ($xMin -0.1 $zLead) (cylinder)  	//3
+    project ($xLead -0.1 $zLead) (aerofoil)	//4
+    project ($xTrail -0.1 $zTrail) (aerofoil)	//5
+    ($xMax -0.1 $zTrail)			//6
+    project ($xLower -0.1 $zLower) (aerofoil) 	//7
+    project ($xUpper -0.1 $zUpper) (aerofoil)	//8
+    project ($xUpper -0.1 $zMax) (cylinder)	//9
+    ($xTrail -0.1 $zMax)			//10
+    ($xMax -0.1 $zMax)				//11
+    project ($xLower  0.1 $zMin) (cylinder)	//12
+    ($xTrail  0.1 $zMin)			//13
+    ($xMax 0.1 $zMin)				//14
+    project ($xMin 0.1 $zLead) (cylinder)	//15
+    project ($xLead 0.1 $zLead) (aerofoil)	//16
+    project ($xTrail 0.1 $zTrail) (aerofoil)	//17
+    ($xMax 0.1 $zTrail)				//18
+    project ($xLower  0.1 $zLower) (aerofoil)	//19
+    project ($xUpper  0.1 $zUpper) (aerofoil)	//20
+    project ($xUpper  0.1 $zMax) (cylinder)	//21
+    ($xTrail  0.1 $zMax)			//22
+    ($xMax 0.1 $zMax)				//23
+);			
+
+blocks
+(
+    hex ( 7 4 16 19 0 3 15 12)
+    ($xUCells 1 $zCells)
+    edgeGrading
+    (
+        $leadGrading $leadGrading $xUGrading $xUGrading
+        1 1 1 1
+        $zGrading $zGrading $zGrading $zGrading
+    )
+
+    hex ( 5 7 19 17 1 0 12 13)
+    ($xMCells 1 $zCells)
+    simpleGrading (1 1 $zGrading)
+
+    hex ( 17 18 6 5 13 14 2 1)
+    ($xDCells 1 $zCells)
+    simpleGrading ($xDGrading 1 $zGrading)
+
+    hex ( 20 16 4 8 21 15 3 9)
+    ($xUCells 1 $zCells)
+    edgeGrading
+    (
+        $leadGrading $leadGrading $xUGrading $xUGrading
+        1 1 1 1
+        $zGrading $zGrading $zGrading $zGrading
+    )
+
+    hex ( 17 20 8 5 22 21 9 10)
+    ($xMCells 1 $zCells)
+    simpleGrading (1 1 $zGrading)
+
+    hex ( 5 6 18 17 10 11 23 22)
+    ($xDCells 1 $zCells)
+    simpleGrading ($xDGrading 1 $zGrading)
+);
+
+edges
+(
+
+    project 4 7 (aerofoil)
+    project 7 5 (aerofoil)
+    project 4 8 (aerofoil)
+    project 8 5 (aerofoil)
+
+    project 16 19 (aerofoil)
+    project 19 17 (aerofoil)
+    project 16 20 (aerofoil)
+    project 20 17 (aerofoil)
+
+    project 3 0 (cylinder)
+    project 3 9 (cylinder)
+    project 15 12 (cylinder)
+    project 15 21 (cylinder)
+);
+
+boundary
+(
+    aerofoil
+    {
+        type wall;
+        faces
+        (
+            (4 7 19 16)
+            (7 5 17 19)
+            (5 8 20 17)
+            (8 4 16 20)
+        );
+    }
+
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (0 3 15 12)
+            (0 12 13 1)
+            (1 13 14 2)
+            (10 11 23 22)
+            (9 10 22 21)
+            (3 9 21 15)
+        );
+    }
+
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (2 14 18 6)
+            (6 18 23 11)
+        );
+    }
+
+    frontAndBack
+    {
+        type empty;
+        faces
+        (
+            (4 3 0 7)
+            (5 7 0 1)
+            (6 5 1 2)
+            (3 4 8 9)
+            (8 5 10 9)
+            (5 6 11 10)
+            (15 16 19 12)
+            (19 17 13 12)
+            (17 18 14 13)
+            (15 16 20 21)
+            (20 17 22 21)
+            (17 18 23 22)
+        );
+    }
+);
+
+// ************************************************************************* //

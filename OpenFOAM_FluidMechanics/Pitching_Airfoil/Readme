@@ -1,0 +1,8 @@
+#To clean the case
+foamCleanTutorial
+
+#Run case
+cp -r 0.orig 0
+blockMesh                                    
+pimpleFoam
+
