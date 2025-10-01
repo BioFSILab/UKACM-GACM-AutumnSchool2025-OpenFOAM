@@ -1,0 +1,24 @@
+#!/bin/sh
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+
+# This tool is developed by Sebastiano Stipa, Politecnico di Milano, 2020 
+
+echo "Starting OpenFOAM job at: " $(date)
+
+restore0Dir
+
+
+runApplication blockMesh
+
+
+
+echo "Running decomposePar" 
+runApplication decomposePar                                
+
+echo "Running the decomposed case using the pimpleFoam solver" 
+runParallel $(getApplication)
+                             
+runApplication reconstructPar
+

@@ -1,0 +1,40 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      dynamicMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dynamicFvMesh      dynamicMotionSolverFvMesh;  //enables mesh morphing 
+
+motionSolverLibs ("libfvMotionSolvers.so");   
+
+motionSolver    solidBody;       
+
+solidBodyMotionFunction oscillatingLinearMotion;
+
+
+patches         (aerofoil); 
+CofG            (0.5 0 0);       //center of gravity
+
+innerDistance   0.01;           //refers to the distance from the origin (or a reference point) of the 
+                                //moving coordinate system attached to the body undergoing motion.
+outerDistance   4.0;            //refers to the distance from the outer boundary or surface of the mesh.
+       
+oscillatingLinearMotionCoeffs
+{
+   //origin          (-0.25 0 0); //origin of rotation
+   amplitude       (0 0.25 0);    //amplitude of oscillations
+   omega           4;        //angular velocity in rad/s
+}
+
+// ************************************************************************* //

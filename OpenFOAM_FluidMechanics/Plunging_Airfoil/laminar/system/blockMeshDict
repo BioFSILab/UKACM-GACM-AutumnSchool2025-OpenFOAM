@@ -1,0 +1,228 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+domain
+{
+    xMin -10;
+    xMax  15;
+    zMin -5;
+    zMax  5;
+
+   
+    zCells  35;                
+    xUCells 9;                 
+    xMCells 7;                 
+    xDCells 35;               
+
+    // grading
+    zGrading    50;  
+    xUGrading   5;             
+    leadGrading 0.1;            
+    xDGrading   10;             
+}
+
+aerofoil
+{
+    xLead   0;
+    zLead   0;
+    xTrail  1;
+    zTrail  0;
+    xUpper  0.3;
+    zUpper  0.06;
+    xLower  0.3;
+    zLower -0.06;
+}
+
+geometry
+{
+    aerofoil
+    {
+        type   triSurfaceMesh;
+        file   "NACA0012.obj";
+    }
+    cylinder
+    {
+        type   searchableCylinder;
+        point1 (0.3 0 -10); // centre
+        point2 (0.3  0 10); //centre
+        radius 5;
+    }
+}
+
+vertices
+(
+    project (0.3   -5 -0.1) (cylinder) //0
+    (1   -5 -0.1) //1
+    (15   -5 -0.1) //2
+
+    project (-10 0 -0.1) (cylinder) //3
+    project (0    0 -0.1) (aerofoil) //4
+    project (1   0 -0.1) (aerofoil) //5
+    (15   0 -0.1) //6
+
+    project (0.3   -0.06 -0.1) (aerofoil) //7
+    project (0.3   0.06 -0.1) (aerofoil) //8
+
+    project (0.3   5 -0.1) (cylinder) //9
+    (1   5 -0.1) //10
+    (15   5 -0.1) //11
+
+    project (0.3    -5 0.1) (cylinder) //12
+    (1    -5 0.1) //13
+    (15   -5 0.1) //14
+
+    project (-10        0 0.1) (cylinder) //15
+    project (0     0 0.1) (aerofoil) //16
+    project (1    0 0.1) (aerofoil) //17
+    (15   0 0.1) //18
+
+    project (0.3    -0.06 0.1) (aerofoil) //19
+    project (0.3    0.06 0.1) (aerofoil) //20
+
+    project (0.3    5 0.1) (cylinder) //21
+    (1    5 0.1) //22
+    (15   5 0.1) //23
+);
+
+blocks
+(
+   // hex ( 19 7 4 16 12 0 3 15)
+   hex (19 16 4 7 12 15 3 0)
+    (9 1 50)
+    edgeGrading
+    (
+        0.1 0.1 5 5
+        1 1 1 1
+        36 36 36 36
+		
+    )
+
+    hex ( 17 19 7 5 13 12 0 1)
+    (7 1 50)
+    simpleGrading (1 1 36)
+
+    hex ( 5 6 18 17 1 2 14 13)
+    (35 1 50)
+    simpleGrading (10 1 36)
+
+    hex ( 8 4 16 20 9 3 15 21)
+    (9 1 50)
+    edgeGrading
+    (
+        0.1 0.1 5 5
+        1 1 1 1
+        36 36 36 36
+		
+    )
+
+    hex ( 5 8 20 17 10 9 21 22)
+    (7 1 50)
+    simpleGrading (1 1 36)
+
+    hex ( 17 18 6 5 22 23 11 10)
+    (35 1 50)
+    simpleGrading (10 1 36)
+);
+
+edges
+(
+
+    project 4 7 (aerofoil)
+    project 7 5 (aerofoil)
+    project 4 8 (aerofoil)
+    project 8 5 (aerofoil)
+
+    project 16 19 (aerofoil)
+    project 19 17 (aerofoil)
+    project 16 20 (aerofoil)
+    project 20 17 (aerofoil)
+
+    project 3 0 (cylinder)
+    project 3 9 (cylinder)
+    project 15 12 (cylinder)
+    project 15 21 (cylinder)
+);
+
+boundary
+(
+    aerofoil
+    {
+        type wall;
+        faces
+        (
+            (4 7 19 16)
+            (7 5 17 19)
+            (5 8 20 17)
+            (8 4 16 20)
+        );
+    }
+
+    inlet
+    {
+        type patch;
+        inGroups (freestream);
+        faces
+        (
+            (0 3 15 12)
+            (0 12 13 1)
+            (1 13 14 2)
+            (10 11 23 22)
+            (9 10 22 21)
+            (3 9 21 15)
+        );
+    }
+
+    outlet
+    {
+        type patch;
+        inGroups (freestream);
+        faces
+        (
+            (2 14 18 6)
+            (6 18 23 11)
+        );
+    }
+
+    back
+    {
+        type empty;
+        faces
+        (
+            (4 3 0 7)
+            (5 7 0 1)
+            (6 5 1 2)
+            (3 4 8 9)
+            (8 5 10 9)
+            (5 6 11 10)
+        );
+    }
+
+    front
+    {
+        type empty;
+        faces
+        (
+            (15 16 19 12)
+            (19 17 13 12)
+            (17 18 14 13)
+            (15 16 20 21)
+            (20 17 22 21)
+            (17 18 23 22)
+        );
+    }
+);
+
+// ************************************************************************* //

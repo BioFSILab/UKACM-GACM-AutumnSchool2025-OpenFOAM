@@ -1,0 +1,27 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  8
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      transportProperties;
+}
+
+// ************************************************************************* //
+
+
+transportModel  Newtonian;
+
+nuVal           0.000001; //kinematic viscosity [nu] is calculated based on the Re chosen. 
+                          //In this case Re = 1e6. Re = U*L/nu. U = 1m/s and L = 1m
+                          //Hence nu = 1e-6
+
+nu              [0 2 -1 0 0 0 0] $nuVal;
+
+// ************************************************************************* //
