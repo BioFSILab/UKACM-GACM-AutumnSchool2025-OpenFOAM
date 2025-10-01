@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Source solids4Foam scripts
+source solids4FoamScripts.sh
+
+# Case only tested with OpenFOAM.com
+solids4Foam::caseDoesNotRunWithFoamExtend
+solids4Foam::caseDoesNotRunWithOpenFOAMOrg
+
+if ! command -v cartesianMesh &> /dev/null
+then
+    echo
+    echo "cartesianMesh command not found, which is required for this case."
+    echo "Please install cfMesh"
+    exit 0
+fi
+
+# Create volume mesh
+solids4Foam::runApplication cartesianMesh
+
+# Check mesh
+solids4Foam::runApplication checkMesh
+
+# Run parallel
+solids4Foam::runApplication decomposePar
+solids4Foam::runParallel solids4Foam
+solids4Foam::runApplication reconstructPar
