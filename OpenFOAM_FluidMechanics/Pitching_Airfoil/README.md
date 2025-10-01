@@ -17,7 +17,7 @@ This case simulates the unsteady aerodynamics of a **pitching NACA0012 airfoil**
 
 ## Case Variants
 - `laminar/` → Laminar pitching simulation  
-- `kOmegaSST/` → Turbulent pitching simulation with k-ω SST model  
+- `komegaSST/` → Turbulent pitching simulation with k-ω SST model  
 
 ---
 
