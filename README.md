@@ -8,13 +8,7 @@ Each folder corresponds to a specific set of tutorials or documentation:
 
 - `Installation_Guidelines/` – Installation guides for OpenFOAM v2412 on **Ubuntu** and **Windows**, including setup of the **solids4foam** solver.  
 - `OpenFOAM_FluidMechanics/` – Fluid mechanics tutorials (e.g., cavity, NACA0012 pitching and plunging airfoil).  
-- `OpenFOAM_SolidMechanics/` – Solid mechanics and FSI tutorials, including the **Hron–Turek benchmark case** for fluid–structure interaction.  
-
-Within each case folder, the standard OpenFOAM directory structure is followed:
-
-- `0/` – Initial and boundary conditions  
-- `constant/` – Mesh and physical models (transport properties, turbulence, etc.)  
-- `system/` – Solver settings, schemes, and controls  
+- `OpenFOAM_SolidMechanics/` – Solid mechanics and FSI tutorials, including the **Hron–Turek benchmark case** for fluid–structure interaction.
 
 ---
 
