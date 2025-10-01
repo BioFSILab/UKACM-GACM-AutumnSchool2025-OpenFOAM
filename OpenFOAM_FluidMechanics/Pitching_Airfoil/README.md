@@ -22,7 +22,7 @@ This case simulates the unsteady aerodynamics of a **pitching NACA0012 airfoil**
 ---
 
 ## Steps to Run
-From the respective case directory (`laminar/` or `kOmegaSST/`):
+From the respective case directory (`laminar/` or `komegaSST/`):
 
 ```bash
 # 1. Generate the mesh
