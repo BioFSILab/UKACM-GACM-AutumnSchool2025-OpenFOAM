@@ -22,14 +22,18 @@ This case simulates the unsteady aerodynamics of a **plunging NACA0012 airfoil**
 ---
 
 ## Steps to Run
-From the respective case directory (`laminar/` or `kOmegaSST/`):
+From the respective case directory (`laminar/` or `komegaSST/`):
 
 ```bash
 # 1. Generate the mesh
 blockMesh
 
-# 2. Run the transient solver
-pimpleFoam
+# 2. Decompose the domain for parallel execution (optional)
+decomposePar -force
+
+# 2. Run the transient solver in parallel ($np = number of processors)
+mpirn -np $np pimpleFoam -parallel
 
 # 3. Visualize results
 paraFoam
+
